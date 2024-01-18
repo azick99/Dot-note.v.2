@@ -2,19 +2,33 @@
 
 import { trpc } from '@/app/_trpc/client'
 import UploadButton from './UploadButton'
-import { Ghost, MessageSquare, Plus, Trash } from 'lucide-react'
+import { Ghost, Loader2, MessageSquare, Plus, Trash } from 'lucide-react'
 import Skeleton from 'react-loading-skeleton'
 import Link from 'next/link'
 import { format } from 'date-fns'
 import { Button } from './ui/button'
+import { useState } from 'react'
+import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/dist/types'
 
 const Dashboard = () => {
+  const [currentlyDeleting, setCurrentlyDeleting] = useState<string | null>(
+    null
+  )
+
   const utils = trpc.useContext()
 
   const { data: files, isLoading } = trpc.getUserFiles.useQuery()
+
+  // Delete file
   const { mutate: deleteFile } = trpc.deleteFile.useMutation({
     onSuccess: () => {
       utils.getUserFiles.invalidate()
+    },
+    onMutate: ({ id }) => {
+      setCurrentlyDeleting(id)
+    },
+    onSettled: () => {
+      setCurrentlyDeleting(null)
     },
   })
 
@@ -47,14 +61,14 @@ const Dashboard = () => {
                   href={`/dashboard/${file.id}`}
                   className="flex flex-col gap-2"
                 >
-                  <div className="pt-6 px-6 flex w-full items-center justify-between space-x-6">
+                  <div className="pt-6 px-6 flex w-full items-center justify-between space-x-4">
                     <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500" />
-                  </div>
-                  <div className="flex-1 truncate">
-                    <div className="flex items-center space-x-3">
-                      <h3 className="truncate text-lg font-medium text-zinc-900">
-                        {file.name}
-                      </h3>
+                    <div className="flex-1 truncate">
+                      <div className="flex items-center space-x-3">
+                        <h3 className="truncate text-lg font-medium text-zinc-900">
+                          {file.name}
+                        </h3>
+                      </div>
                     </div>
                   </div>
                 </Link>
@@ -69,11 +83,15 @@ const Dashboard = () => {
                   </div>
                   <Button
                     size="sm"
-                    className="w-full"
+                    className="w-full border border-transparent hover:border-red-500/60 transition-all"
                     variant="destructive"
                     onClick={() => handleDelete(file.id)}
                   >
-                    <Trash className="h-4 w-4" />
+                    {currentlyDeleting === file.id ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Trash className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </li>
