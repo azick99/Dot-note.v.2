@@ -4,28 +4,34 @@ import { createUploadthing, type FileRouter } from 'uploadthing/next'
 
 const f = createUploadthing()
 
-// FileRouter for your app, can contain multiple FileRoutes
 export const ourFileRouter = {
-  // Define as many FileRoutes as you like, each with a unique routeSlug
   pdfUploader: f({ pdf: { maxFileSize: '4MB' } })
-    // Set permissions and file types for this FileRoute
     .middleware(async ({ req }) => {
       const { getUser } = getKindeServerSession()
-      // This code runs on your server before upload
       const user = await getUser()
+
       if (!user || !user?.id) {
         throw new Error('Unauthorized')
       }
 
       return { userId: user.id }
     })
+
     .onUploadComplete(async ({ metadata, file }) => {
-      const createFile = await db.file.create({
+      const isFileExist = await db.file.findFirst({
+        where: {
+          key: file.key,
+        },
+      })
+
+      if (isFileExist) return
+
+      const createdFile = await db.file.create({
         data: {
           key: file.key,
           name: file.name,
           userId: metadata.userId,
-          url: `https://uploadthing-prod.s3.amazonaws.com/${file.key}`,
+          url: file.url,
           uploadStatus: 'PROCESSING',
         },
       })
