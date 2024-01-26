@@ -18,6 +18,7 @@ const UploadDropzone = () => {
   const { toast } = useToast()
 
   const { startUpload } = useUploadThing('pdfUploader')
+  
 
   const { mutate: startPolling } = trpc.getFile.useMutation({
     onSuccess: (file) => {
