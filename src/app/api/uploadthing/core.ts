@@ -17,25 +17,36 @@ export const ourFileRouter = {
       return { userId: user.id }
     })
 
-    .onUploadComplete(async ({ metadata, file }) => {
-      const isFileExist = await db.file.findFirst({
-        where: {
-          key: file.key,
-        },
-      })
+    .onUploadComplete(
+      async ({
+        metadata,
+        file,
+      }: {
+        metadata: { userId: string }
+        file: { key: string; name: string; url: string }
+      }) => {
+        const isFileExist = await db.file.findFirst({
+          where: {
+            key: file.key,
+          },
+        })
 
-      if (isFileExist) return
+        if (isFileExist) return
 
-      const createdFile = await db.file.create({
-        data: {
-          key: file.key,
-          name: file.name,
-          userId: metadata.userId,
-          url: file.url,
-          uploadStatus: 'PROCESSING',
-        },
-      })
-    }),
+        const createdFile = await db.file.create({
+          data: {
+            key: file.key,
+            name: file.name,
+            userId: metadata.userId,
+            url: file.url,
+            uploadStatus: 'PROCESSING',
+          },
+        })
+        try {
+          const response = file.url
+        } catch (err) {}
+      }
+    ),
 } satisfies FileRouter
 
 export type OurFileRouter = typeof ourFileRouter

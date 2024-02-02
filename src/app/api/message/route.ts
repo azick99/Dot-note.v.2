@@ -27,11 +27,14 @@ export const POST = async (req: NextRequest) => {
 
   await db.message.create({
     data: {
+      text: message,
+      isUserMessage: true,
       fileId,
-      message,
       userId,
     },
   })
+
+  //
 
   return new Response(null, { status: 200 })
 }
