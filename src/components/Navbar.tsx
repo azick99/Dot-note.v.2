@@ -8,13 +8,14 @@ import {
   getKindeServerSession,
 } from '@kinde-oss/kinde-auth-nextjs/server'
 import { ArrowRight } from 'lucide-react'
+import Sidebar from './sidebar/Sidebar'
 
 const Navbar = async () => {
   const { getUser } = getKindeServerSession()
   const user = await getUser()
 
-  return (
-    <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b-gray-200 bg-white/70 backdrop-blur-lg transition-all">
+  const content = (
+    <div className="sticky h-14  top-0 z-30 w-full border-b-gray-200 bg-white/70 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
         <div className="flex h-14 items-center justify-between border-b border-zinc-200 ">
           <Link href="/" className="flex z-40 font-semibold">
@@ -60,8 +61,9 @@ const Navbar = async () => {
           </div>
         </div>
       </MaxWidthWrapper>
-    </nav>
+    </div>
   )
-}
 
+  return <nav>{user !== null ? <Sidebar /> : content} </nav>
+}
 export default Navbar
