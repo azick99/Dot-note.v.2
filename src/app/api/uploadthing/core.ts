@@ -2,6 +2,11 @@ import { db } from '@/db'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { createUploadthing, type FileRouter } from 'uploadthing/next'
 
+import { PDFLoader } from 'langchain/document_loaders/fs/pdf'
+import { OpenAIEmbeddings } from '@langchain/openai'
+import { pinecone } from '@/lib/pinecone'
+import { PineconeStore } from '@langchain/pinecone'
+
 const f = createUploadthing()
 
 export const ourFileRouter = {
@@ -44,7 +49,44 @@ export const ourFileRouter = {
         })
         try {
           const response = file.url
-        } catch (err) {}
+
+          const loader = new PDFLoader(response)
+
+          const pageLavelDocs = await loader.load()
+
+          const pagesAmount = pageLavelDocs.length
+
+          // vecotrize
+
+          const pineconeIndex = pinecone.Index('dot-note')
+       
+          const embeddings = new OpenAIEmbeddings({
+            openAIApiKey: process.env.OPENAI_API_KEY,
+          })
+
+          await PineconeStore.fromDocuments(pageLavelDocs, embeddings, {
+            pineconeIndex,
+            namespace: createdFile.id,
+          })
+
+          await db.file.update({
+            where: {
+              id: createdFile.id,
+            },
+            data: {
+              uploadStatus: 'SUCCESS',
+            },
+          })
+        } catch (err) {
+          await db.file.update({
+            where: {
+              id: createdFile.id,
+            },
+            data: {
+              uploadStatus: 'FAILED',
+            },
+          })
+        }
       }
     ),
 } satisfies FileRouter
