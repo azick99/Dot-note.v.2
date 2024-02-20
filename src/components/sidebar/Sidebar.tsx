@@ -6,9 +6,9 @@ import { HiOutlineLogout } from 'react-icons/hi'
 import { LogoutLink } from '@kinde-oss/kinde-auth-nextjs/server'
 import { Menu } from 'lucide-react'
 
-const Sidebar = () => {
+export default function Sidebar() {
   return (
-    <div className="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800">
+    <div className="flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800">
       <div className="fixed flex flex-col top-0 left-0 w-64 bg-white h-full border-r">
         <div className="flex items-center justify-between h-14 border-b">
           <Link href="/" className="flex items-center pl-5 gap-2">
@@ -45,5 +45,3 @@ const Sidebar = () => {
     </div>
   )
 }
-
-export default Sidebar

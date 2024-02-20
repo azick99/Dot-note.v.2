@@ -31,7 +31,7 @@ const ProjectsDropdown = ({ navigator }: { navigator: Navigator }) => (
   </DropdownMenu>
 )
 
-const SingleNavigator = () => {
+export default function SingleNavigator() {
   return (
     <>
       {navigators.map((navigator) => {
@@ -61,4 +61,4 @@ const SingleNavigator = () => {
   )
 }
 
-export default SingleNavigator
+
