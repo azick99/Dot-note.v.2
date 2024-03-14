@@ -8,7 +8,6 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { Button } from './ui/button'
 import { useState } from 'react'
-import { KindeUser } from '@kinde-oss/kinde-auth-nextjs/dist/types'
 
 const Dashboard = () => {
   const [currentlyDeleting, setCurrentlyDeleting] = useState<string | null>(
@@ -32,7 +31,8 @@ const Dashboard = () => {
     },
   })
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
+
     deleteFile({ id })
   }
 

@@ -48,18 +48,16 @@ export const ourFileRouter = {
           },
         })
         try {
-          const response = file.url
-
-          const loader = new PDFLoader(response)
+          const response = await fetch(file.url)
+          const blob = await response.blob()
+          const loader = new PDFLoader(blob)
 
           const pageLavelDocs = await loader.load()
-
-          const pagesAmount = pageLavelDocs.length
 
           // vecotrize
 
           const pineconeIndex = pinecone.Index('dot-note')
-       
+
           const embeddings = new OpenAIEmbeddings({
             openAIApiKey: process.env.OPENAI_API_KEY,
           })

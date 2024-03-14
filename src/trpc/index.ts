@@ -3,6 +3,7 @@ import { privateProcedure, publicProcedure, router } from './trpc'
 import { TRPCError } from '@trpc/server'
 import { db } from '@/db'
 import { z } from 'zod'
+import { UTApi } from 'uploadthing/server'
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
     const { getUser } = getKindeServerSession()
@@ -49,9 +50,9 @@ export const appRouter = router({
         },
       })
 
-      if (!file) return { status:'PENDING' as const}
+      if (!file) return { status: 'PENDING' as const }
 
-      return {status: file.uploadStatus}
+      return { status: file.uploadStatus }
     }),
 
   getFile: privateProcedure
@@ -83,13 +84,13 @@ export const appRouter = router({
       })
 
       if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
-
       await db.file.delete({
         where: {
           id: input.id,
         },
       })
-
+      const utapi = new UTApi()
+      await utapi.deleteFiles(file.key)
       return file
     }),
 })
