@@ -1,11 +1,10 @@
-'use client';
+'use client'
 
 import { useRouter, useSearchParams } from 'next/navigation'
 
 import { Loader2 } from 'lucide-react'
 import { trpc } from '../_trpc/client'
 
-// eslint-disable-next-line @next/next/no-async-client-component
 export default function Page() {
   const router = useRouter()
 

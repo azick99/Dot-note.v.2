@@ -19,20 +19,20 @@ const navigators: Navigator[] = [
   },
   {
     id: 1,
+    title: 'Projects',
+    icon: HiOutlineFolder,
+  },
+  {
+    id: 2,
     title: 'Updates',
     path: '/updates',
     icon: HiOutlineClock,
   },
   {
-    id: 2,
+    id: 3,
     title: 'Settings',
     path: '/settings',
     icon: LuSettings2,
-  },
-  {
-    id: 3,
-    title: 'Projects',
-    icon: HiOutlineFolder,
   },
 ]
 
