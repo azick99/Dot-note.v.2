@@ -9,7 +9,7 @@ import { format } from 'date-fns'
 import { Button } from './ui/button'
 import { useState } from 'react'
 
-const Dashboard = () => {
+export default function Dashboard() {
   const [currentlyDeleting, setCurrentlyDeleting] = useState<string | null>(
     null
   )
@@ -32,7 +32,6 @@ const Dashboard = () => {
   })
 
   const handleDelete = async (id: string) => {
-
     deleteFile({ id })
   }
 
@@ -109,5 +108,3 @@ const Dashboard = () => {
     </main>
   )
 }
-
-export default Dashboard
