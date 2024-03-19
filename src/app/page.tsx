@@ -9,15 +9,15 @@ export default function Home() {
       <MaxWidthWrapper className="md-12 mt-28 sm:mt-40 flex flex-col items-center">
         <div className="mx-auto mb-4 flex max-w-fit items-center justify-center space-x-2 overflow-hidden rounded-full border border-gray-200 bg-white px-7 py-2 shadow-md backdrop-blur transition-all hover:border-gray-300 hover:bg-white/50">
           <p className="text-sm font-semibold text-gray-700">
-            Quill is now public
+            Dot Note is now public
           </p>
         </div>
         <h1 className="max-w-4l text-5xl font-bold md:text-6xl lg:text-7xl text-center">
           Chat with <span className="text-blue-600">documents</span> in seconds
         </h1>
         <p className="mt-5 max-w-prose text-zinc-700 sm:text-lg text-center">
-          Quill allows you to have conversations with any PDF document. Simply
-          upload yoou file and start asking quiestions right away.
+          Dot Note allows you to have conversations with any PDF document.
+          Simply upload yoou file and start asking quiestions right away.
         </p>
         <Link
           className={buttonVariants({
@@ -86,7 +86,8 @@ export default function Home() {
               Start chatting in minutes
             </h2>
             <p className="mt-4 text-lg text-gray-600">
-              Chatting to your PDF files has never been easier than with Quill
+              Chatting to your PDF files has never been easier than with Dot
+              Note
             </p>
           </div>
         </div>
@@ -130,26 +131,26 @@ export default function Home() {
                 Start asking questions
               </span>
               <span className="mt-2 text-zinc-700">
-                it&apos;s that simple. Try out Quill today - it realy takes
+                it&apos;s that simple. Try out Dot Note today - it realy takes
                 less than minute.
               </span>
             </div>
           </li>
         </ol>
         <div className="mx-auto max-w-6xl px-6 lg:px-8">
-              <div className="mt-16 flow-root sm:mt-24">
-                <div className="-m-2 rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
-                  <Image
-                    src="/file-upload-preview.jpg"
-                    width={1419}
-                    height={732}
-                    quality={100}
-                    alt="uploading preview preview"
-                    className="rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
-                  />
-                </div>
-              </div>
+          <div className="mt-16 flow-root sm:mt-24">
+            <div className="-m-2 rounded-xl bg-gray-900/5 ring-1 ring-inset ring-gray-900/10 lg:-m-4 lg:rounded-2xl lg:p-4">
+              <Image
+                src="/file-upload-preview.jpg"
+                width={1419}
+                height={732}
+                quality={100}
+                alt="uploading preview preview"
+                className="rounded-md bg-white p-2 sm:p-8 md:p-20 shadow-2xl ring-1 ring-gray-900/10"
+              />
             </div>
+          </div>
+        </div>
       </div>
     </>
   )
