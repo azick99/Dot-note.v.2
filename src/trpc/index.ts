@@ -4,7 +4,7 @@ import { TRPCError } from '@trpc/server'
 import { db } from '@/db'
 import { z } from 'zod'
 import { UTApi } from 'uploadthing/server'
-import { INFININATE_QUERY_LIMIT } from '@/config/inifininate-query'
+import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query'
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
     const { getUser } = getKindeServerSession()
@@ -51,7 +51,7 @@ export const appRouter = router({
     .query(async ({ input, ctx }) => {
       const { userId } = ctx
       const { fileId, cursor } = input
-      const limit = input.limit ?? INFININATE_QUERY_LIMIT
+      const limit = input.limit ?? INFINITE_QUERY_LIMIT
       const file = await db.file.findFirst({
         where: {
           id: fileId,

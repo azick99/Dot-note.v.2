@@ -1,17 +1,20 @@
 import { trpc } from '@/app/_trpc/client'
-import { INFININATE_QUERY_LIMIT } from '@/config/inifininate-query'
+import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query'
 import { Loader2, MessageSquare } from 'lucide-react'
-import React from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import Skeleton from 'react-loading-skeleton'
 import Message from './Message'
-
+import { ChatContext } from './ChatContext'
+import { useIntersection } from '@mantine/hooks'
 interface MessagesProps {
   fileId: string
 }
 const Messages = ({ fileId }: MessagesProps) => {
+  const { isLoading: isAiThinking } = useContext(ChatContext)
+
   const { data, isLoading, fetchNextPage } =
     trpc.getFileMessages.useInfiniteQuery(
-      { fileId, limit: INFININATE_QUERY_LIMIT },
+      { fileId, limit: INFINITE_QUERY_LIMIT },
       {
         getNextPageParam: (lastPage) => lastPage?.nextCursor,
         keepPreviousData: true,
@@ -30,11 +33,23 @@ const Messages = ({ fileId }: MessagesProps) => {
   }
   const messages = data?.pages.flatMap((page) => page.messages)
   const combinedMessages = [
-    ...(true ? [loadingMessage] : []),
+    ...(isAiThinking ? [loadingMessage] : []),
     ...(messages ?? []),
   ]
+
+  const lastMessageRef = useRef<HTMLDivElement>(null)
+  const { ref, entry } = useIntersection({
+    root: lastMessageRef.current,
+    threshold: 0,
+  })
+
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      fetchNextPage()
+    }
+  }, [entry, fetchNextPage])
   return (
-    <div className="flex max-h-[calc(100vh-3.5rem-7rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+    <div className="flex max-h-[calc(100vh-3.5rem-7rem)] border-zinc-200 flex-1 flex-col-reverse gap-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch mb-12">
       {combinedMessages && combinedMessages.length > 0 ? (
         combinedMessages.map((message, index) => {
           const isNextMessageSamePerson =
@@ -43,16 +58,17 @@ const Messages = ({ fileId }: MessagesProps) => {
           if (index === combinedMessages.length - 1) {
             return (
               <Message
-                isNextMessageSamePerson={isNextMessageSamePerson}
+                ref={ref}
                 message={message}
+                isNextMessageSamePerson={isNextMessageSamePerson}
                 key={message.id}
               />
             )
           } else
             return (
               <Message
-                isNextMessageSamePerson={isNextMessageSamePerson}
                 message={message}
+                isNextMessageSamePerson={isNextMessageSamePerson}
                 key={message.id}
               />
             )

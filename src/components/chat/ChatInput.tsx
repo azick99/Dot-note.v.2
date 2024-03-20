@@ -27,7 +27,7 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
             <div className="relative">
               <Textarea
                 rows={1}
-                maxRows={4}
+                maxRows={3}
                 ref={textareRef}
                 value={message}
                 onChange={handleInputChange}
@@ -40,10 +40,10 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
                   }
                 }}
                 placeholder="Enter your question..."
-                className="resize-none pr-12 text-base py-3 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+                className="resize-none pr-16 text-base py-3 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
               />
               <Button
-                disabled={isLoading}
+                disabled={isLoading || !message}
                 onClick={handleAddMessageClick}
                 aria-label="send message"
                 className="absolute bottom-[10px] right-[8px] "
