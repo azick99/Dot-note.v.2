@@ -3,6 +3,8 @@ import { privateProcedure, publicProcedure, router } from './trpc'
 import { TRPCError } from '@trpc/server'
 import { db } from '@/db'
 import { z } from 'zod'
+import { UTApi } from 'uploadthing/server'
+import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query'
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
     const { getUser } = getKindeServerSession()
@@ -38,7 +40,55 @@ export const appRouter = router({
       },
     })
   }),
+  getFileMessages: privateProcedure
+    .input(
+      z.object({
+        limit: z.number().min(1).max(100).nullish(),
+        cursor: z.string().nullish(),
+        fileId: z.string(),
+      })
+    )
+    .query(async ({ input, ctx }) => {
+      const { userId } = ctx
+      const { fileId, cursor } = input
+      const limit = input.limit ?? INFINITE_QUERY_LIMIT
+      const file = await db.file.findFirst({
+        where: {
+          id: fileId,
+          userId,
+        },
+      })
 
+      if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
+
+      const messages = await db.message.findMany({
+        where: {
+          fileId,
+        },
+        take: limit + 1,
+        cursor: cursor ? { id: cursor } : undefined,
+        orderBy: {
+          createdAt: 'desc',
+        },
+        select: {
+          id: true,
+          isUserMessage: true,
+          text: true,
+          createdAt: true,
+        },
+      })
+
+      let nextCursor: typeof cursor | undefined = undefined
+      if (messages.length > limit) {
+        const nextItem = messages.pop()
+        nextCursor = nextItem?.id
+      }
+
+      return {
+        messages,
+        nextCursor,
+      }
+    }),
   getFileUploadStatus: privateProcedure
     .input(z.object({ fileId: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -49,9 +99,9 @@ export const appRouter = router({
         },
       })
 
-      if (!file) return { status:'PENDING' as const}
+      if (!file) return { status: 'PENDING' as const }
 
-      return {status: file.uploadStatus}
+      return { status: file.uploadStatus }
     }),
 
   getFile: privateProcedure
@@ -83,13 +133,13 @@ export const appRouter = router({
       })
 
       if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
-
       await db.file.delete({
         where: {
           id: input.id,
         },
       })
-
+      const utapi = new UTApi()
+      await utapi.deleteFiles(file.key)
       return file
     }),
 })
