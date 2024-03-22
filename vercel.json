@@ -1,8 +1,0 @@
-{
-    "routes": {
-      "/api/trpc/*": {
-        "methods": ["GET", "OPTIONS"],
-        "allowOrigins": ["https://dot-note-henna.vercel.app"]
-      }
-    }
-}
