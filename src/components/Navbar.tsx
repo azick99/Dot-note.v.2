@@ -14,9 +14,9 @@ const Navbar = async () => {
   const user = await getUser()
 
   return (
-    <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b-gray-200 bg-white/70 backdrop-blur-lg transition-all">
+    <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b-gray-200 border-b bg-white/70 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
-        <div className="flex h-14 items-center justify-between border-b border-zinc-200 ">
+        <div className="flex h-14 items-center justify-between  border-zinc-200 ">
           <Link href="/" className="flex items-center pl-5 gap-2">
             <span className=" text-logo bg-black rounded-full w-7 h-7 flex justify-center items-center text-white font-serif font-medium">
               N
