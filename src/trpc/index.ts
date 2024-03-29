@@ -3,14 +3,14 @@ import { privateProcedure, publicProcedure, router } from './trpc'
 import { TRPCError } from '@trpc/server'
 import { db } from '@/db'
 import { z } from 'zod'
-import { UTApi } from 'uploadthing/server'
 import { INFINITE_QUERY_LIMIT } from '@/config/infinite-query'
+
 export const appRouter = router({
   authCallback: publicProcedure.query(async () => {
-    const { getUser } = getKindeServerSession()
+    const { getUser } =  getKindeServerSession()
     const user = await getUser()
 
-    if (!user?.id || !user?.email) throw new TRPCError({ code: 'UNAUTHORIZED' })
+    if (!user?.id || !user.email) throw new TRPCError({ code: 'UNAUTHORIZED' })
 
     // check if the user is in the database
     const dbUser = await db.user.findFirst({
@@ -31,15 +31,16 @@ export const appRouter = router({
 
     return { success: true }
   }),
-
   getUserFiles: privateProcedure.query(async ({ ctx }) => {
     const { userId } = ctx
+
     return await db.file.findMany({
       where: {
         userId,
       },
     })
   }),
+
   getFileMessages: privateProcedure
     .input(
       z.object({
@@ -48,10 +49,11 @@ export const appRouter = router({
         fileId: z.string(),
       })
     )
-    .query(async ({ input, ctx }) => {
+    .query(async ({ ctx, input }) => {
       const { userId } = ctx
       const { fileId, cursor } = input
       const limit = input.limit ?? INFINITE_QUERY_LIMIT
+
       const file = await db.file.findFirst({
         where: {
           id: fileId,
@@ -62,19 +64,19 @@ export const appRouter = router({
       if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
 
       const messages = await db.message.findMany({
+        take: limit + 1,
         where: {
           fileId,
         },
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
           createdAt: 'desc',
         },
+        cursor: cursor ? { id: cursor } : undefined,
         select: {
           id: true,
           isUserMessage: true,
-          text: true,
           createdAt: true,
+          text: true,
         },
       })
 
@@ -89,6 +91,7 @@ export const appRouter = router({
         nextCursor,
       }
     }),
+
   getFileUploadStatus: privateProcedure
     .input(z.object({ fileId: z.string() }))
     .query(async ({ input, ctx }) => {
@@ -108,6 +111,7 @@ export const appRouter = router({
     .input(z.object({ key: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx
+
       const file = await db.file.findFirst({
         where: {
           key: input.key,
@@ -124,7 +128,7 @@ export const appRouter = router({
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const { userId } = ctx
-      // check if the file exists
+
       const file = await db.file.findFirst({
         where: {
           id: input.id,
@@ -133,17 +137,15 @@ export const appRouter = router({
       })
 
       if (!file) throw new TRPCError({ code: 'NOT_FOUND' })
+
       await db.file.delete({
         where: {
           id: input.id,
         },
       })
-      const utapi = new UTApi()
-      await utapi.deleteFiles(file.key)
+
       return file
     }),
 })
 
-// Export type router type signature,
-// NOT the router itself.
 export type AppRouter = typeof appRouter
