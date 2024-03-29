@@ -10,7 +10,7 @@ import {
 import { ArrowRight } from 'lucide-react'
 import Sidebar from './sidebar/Sidebar'
 
-const Navbar = async () => {
+export default async function Navbar() {
   const { getUser } = getKindeServerSession()
   const user = await getUser()
 
@@ -69,4 +69,3 @@ const Navbar = async () => {
 
   return <nav>{user !== null ? <Sidebar /> : content} </nav>
 }
-export default Navbar
