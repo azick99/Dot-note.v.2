@@ -5,17 +5,14 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { trpc } from '@/app/_trpc/client'
 import { httpBatchLink } from '@trpc/client'
 
-
 const Provider = ({ children }: PropsWithChildren) => {
-
-
   const [queryClient] = useState(() => new QueryClient())
   const [trpcClient] = useState(() =>
     trpc.createClient({
       links: [
-        httpBatchLink({ 
-          url: 'https://dot-note-henna.vercel.app/api/trpc' 
-        })
+        httpBatchLink({
+          url: 'https://dot-note-aziz.vercel.app/api/trpc',
+        }),
       ],
     })
   )
