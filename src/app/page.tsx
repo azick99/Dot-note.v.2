@@ -1,8 +1,10 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import { buttonVariants } from '@/components/ui/button'
+import { RegisterLink } from '@kinde-oss/kinde-auth-nextjs/server'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+
 export default function Home() {
   return (
     <>
@@ -19,16 +21,16 @@ export default function Home() {
           Dot Note allows you to have conversations with any PDF document.
           Simply upload yoou file and start asking quiestions right away.
         </p>
-        <Link
+        <RegisterLink
           className={buttonVariants({
             size: 'lg',
             className: 'mt-5 bg-gray-700',
           })}
-          href="/dashboard"
-          target="_blank"
+          // href="/dashboard"
+          // target="_blank"
         >
           Get started <ArrowRight className="ml-2 h-5 w-5" />
-        </Link>
+        </RegisterLink>
       </MaxWidthWrapper>
 
       {/* Value proposition section */}
