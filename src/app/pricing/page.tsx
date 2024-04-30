@@ -1,11 +1,21 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
-import { TooltipProvider } from '@/components/ui/tooltip'
+import { buttonVariants } from '@/components/ui/button'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
+import UpgradeButton from '@/components/UpgradeButton'
 import { PLANS } from '@/config/stripe'
 import { cn } from '@/lib/utils'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
-const Page = () => {
+import { ArrowRight, Check, HelpCircle, Minus } from 'lucide-react'
+import Link from 'next/link'
+
+export default async function Page() {
   const { getUser } = getKindeServerSession()
-  const user = getUser()
+  const user = await getUser()
 
   const pricingItems = [
     {
@@ -82,7 +92,7 @@ const Page = () => {
               return (
                 <div
                   key={plan}
-                  className={cn('relative rounded-2xl bg-white shadow-lg', {
+                  className={cn('relative rounded-xl bg-white shadow-lg', {
                     'border-2 border-blue-600 shadow-blue-200': plan === 'Pro',
                     'border border-gray-200 ': plan !== 'Pro',
                   })}
@@ -105,7 +115,82 @@ const Page = () => {
                   <div className="flex h-20 items-center justify-center border-b border-t border-gray-200 bg-gray-50">
                     <div className="flex items-center space-x-1">
                       {quota.toLocaleString()} PDFs/mo included
+                      <Tooltip delayDuration={300}>
+                        <TooltipTrigger className="cursor-default ml-1.5">
+                          <HelpCircle className="h-4 w-4 text-zinc-500"></HelpCircle>
+                        </TooltipTrigger>
+                        <TooltipContent className="w-80 p-2">
+                          How many PDFs You can uploadper month.
+                        </TooltipContent>
+                      </Tooltip>
                     </div>
+                  </div>
+
+                  <ul className="my-10 space-y-5 px-8">
+                    {features.map(({ text, footnote, negative }) => (
+                      <li key={text} className="flex space-x-5">
+                        <div className="flex-shrink-0">
+                          {negative ? (
+                            <Minus className="h-6 w-6 text-gray-300" />
+                          ) : (
+                            <Check className="h-6 w-6 text-blue-500" />
+                          )}
+                        </div>
+                        {footnote ? (
+                          <div className="flex items-center space-x-1">
+                            {' '}
+                            <p
+                              className={cn('text-gray-400', {
+                                'text-gray-600': negative,
+                              })}
+                            >
+                              {text}
+                            </p>
+                            <Tooltip delayDuration={300}>
+                              <TooltipTrigger className="cursor-default ml-1.5">
+                                <HelpCircle className="h-4 w-4 text-zinc-500"></HelpCircle>
+                              </TooltipTrigger>
+                              <TooltipContent className="w-80 p-2">
+                                {footnote}
+                              </TooltipContent>
+                            </Tooltip>
+                          </div>
+                        ) : (
+                          <p
+                            className={cn('text-gray-400', {
+                              'text-gray-600': negative,
+                            })}
+                          >
+                            {text}
+                          </p>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="border-t border-gray-200" />
+                  <div className="p-5">
+                    {plan === 'Free' ? (
+                      <Link
+                        href={user ? '/dashboard' : '/sign-in'}
+                        className={buttonVariants({
+                          className: 'w-full',
+                          variant: 'secondary',
+                        })}
+                      >
+                        {user ? 'Upgrade now' : 'Sign up'}{' '}
+                        <ArrowRight className="h-5 w-5 ml-1.5" />
+                      </Link>
+                    ) : user ? (
+                      <UpgradeButton />
+                    ) : (
+                      <Link
+                        href="/sign-in"
+                        className={buttonVariants({ className: 'w-full' })}
+                      >
+                        {user ? 'Upgrade now' : 'Sign up'}
+                        <ArrowRight className="h-5 w-5 ml-1.5" />
+                      </Link>
+                    )}
                   </div>
                 </div>
               )
@@ -116,5 +201,3 @@ const Page = () => {
     </>
   )
 }
-
-export default Page

@@ -11,7 +11,7 @@ const Provider = ({ children }: PropsWithChildren) => {
     trpc.createClient({
       links: [
         httpBatchLink({
-          url: 'https://dot-note-aziz.vercel.app/api/trpc',
+          url: 'http://localhost:3000',
         }),
       ],
     })
