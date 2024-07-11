@@ -1,4 +1,5 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
+import UpgradeButton from '@/components/UpgradeButton'
 import { buttonVariants } from '@/components/ui/button'
 import {
   Tooltip,
@@ -6,14 +7,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from '@/components/ui/tooltip'
-import UpgradeButton from '@/components/UpgradeButton'
 import { PLANS } from '@/config/stripe'
 import { cn } from '@/lib/utils'
 import { getKindeServerSession } from '@kinde-oss/kinde-auth-nextjs/server'
 import { ArrowRight, Check, HelpCircle, Minus } from 'lucide-react'
 import Link from 'next/link'
 
-export default async function Page() {
+async function PricingPage() {
   const { getUser } = getKindeServerSession()
   const user = await getUser()
 
@@ -78,23 +78,24 @@ export default async function Page() {
         <div className="mx-auto mb-10 sm:max-w-lg">
           <h1 className="text-6xl font-bold sm:text-7xl">Pricing</h1>
           <p className="mt-5 text-gray-600 sm:text-lg">
-            Whether you&apos;re just trying our service or need more we&apos;ve
-            you covered.
+            Whether you&apos;re just trying out our service or need more,
+            we&apos;ve got you covered.
           </p>
         </div>
-        <div className="pt-12 grid grid-cols-10 gap-10 lg:grid-cols-2">
+
+        <div className="pt-12 grid grid-cols-1 gap-10 lg:grid-cols-2">
           <TooltipProvider>
             {pricingItems.map(({ plan, tagline, quota, features }) => {
               const price =
-                PLANS.find((p) => p.slug === plan.toLocaleLowerCase())?.price
+                PLANS.find((p) => p.slug === plan.toLowerCase())?.price
                   .amount || 0
 
               return (
                 <div
                   key={plan}
-                  className={cn('relative rounded-xl bg-white shadow-lg', {
+                  className={cn('relative rounded-2xl bg-white shadow-lg', {
                     'border-2 border-blue-600 shadow-blue-200': plan === 'Pro',
-                    'border border-gray-200 ': plan !== 'Pro',
+                    'border border-gray-200': plan !== 'Pro',
                   })}
                 >
                   {plan === 'Pro' && (
@@ -102,25 +103,28 @@ export default async function Page() {
                       Upgrade now
                     </div>
                   )}
+
                   <div className="p-5">
                     <h3 className="my-3 text-center font-display text-3xl font-bold">
                       {plan}
                     </h3>
                     <p className="text-gray-500">{tagline}</p>
                     <p className="my-5 font-display text-6xl font-semibold">
-                      {price} zl
+                      ${price}
                     </p>
                     <p className="text-gray-500">per month</p>
                   </div>
+
                   <div className="flex h-20 items-center justify-center border-b border-t border-gray-200 bg-gray-50">
                     <div className="flex items-center space-x-1">
-                      {quota.toLocaleString()} PDFs/mo included
+                      <p>{quota.toLocaleString()} PDFs/mo included</p>
+
                       <Tooltip delayDuration={300}>
                         <TooltipTrigger className="cursor-default ml-1.5">
-                          <HelpCircle className="h-4 w-4 text-zinc-500"></HelpCircle>
+                          <HelpCircle className="h-4 w-4 text-zinc-500" />
                         </TooltipTrigger>
                         <TooltipContent className="w-80 p-2">
-                          How many PDFs You can uploadper month.
+                          How many PDFs you can upload per month.
                         </TooltipContent>
                       </Tooltip>
                     </div>
@@ -138,17 +142,16 @@ export default async function Page() {
                         </div>
                         {footnote ? (
                           <div className="flex items-center space-x-1">
-                            {' '}
                             <p
-                              className={cn('text-gray-400', {
-                                'text-gray-600': negative,
+                              className={cn('text-gray-600', {
+                                'text-gray-400': negative,
                               })}
                             >
                               {text}
                             </p>
                             <Tooltip delayDuration={300}>
                               <TooltipTrigger className="cursor-default ml-1.5">
-                                <HelpCircle className="h-4 w-4 text-zinc-500"></HelpCircle>
+                                <HelpCircle className="h-4 w-4 text-zinc-500" />
                               </TooltipTrigger>
                               <TooltipContent className="w-80 p-2">
                                 {footnote}
@@ -157,8 +160,8 @@ export default async function Page() {
                           </div>
                         ) : (
                           <p
-                            className={cn('text-gray-400', {
-                              'text-gray-600': negative,
+                            className={cn('text-gray-600', {
+                              'text-gray-400': negative,
                             })}
                           >
                             {text}
@@ -177,7 +180,7 @@ export default async function Page() {
                           variant: 'secondary',
                         })}
                       >
-                        {user ? 'Upgrade now' : 'Sign up'}{' '}
+                        {user ? 'Upgrade now' : 'Sign up'}
                         <ArrowRight className="h-5 w-5 ml-1.5" />
                       </Link>
                     ) : user ? (
@@ -185,7 +188,9 @@ export default async function Page() {
                     ) : (
                       <Link
                         href="/sign-in"
-                        className={buttonVariants({ className: 'w-full' })}
+                        className={buttonVariants({
+                          className: 'w-full',
+                        })}
                       >
                         {user ? 'Upgrade now' : 'Sign up'}
                         <ArrowRight className="h-5 w-5 ml-1.5" />
@@ -201,3 +206,5 @@ export default async function Page() {
     </>
   )
 }
+
+export default PricingPage

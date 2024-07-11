@@ -45,6 +45,7 @@ const UploadDropzone = () => {
   return (
     <Dropzone
       disabled={!!uploadProgress}
+      aria-disabled={!!uploadProgress}
       multiple={false}
       onDrop={async (acceptedFile) => {
         setIsUploading(true)

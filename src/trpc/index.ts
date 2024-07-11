@@ -13,7 +13,7 @@ export const appRouter = router({
     const { getUser } = getKindeServerSession()
     const user = await getUser()
 
-    if (!user?.id || !user.email) throw new TRPCError({ code: 'UNAUTHORIZED' })
+    if (!user?.id || !user?.email) throw new TRPCError({ code: 'UNAUTHORIZED' })
 
     // check if the user is in the database
     const dbUser = await db.user.findFirst({
@@ -33,6 +33,15 @@ export const appRouter = router({
     }
 
     return { success: true }
+  }),
+  getUserFiles: privateProcedure.query(async ({ ctx }) => {
+    const { userId } = ctx
+
+    return await db.file.findMany({
+      where: {
+        userId,
+      },
+    })
   }),
 
   createStripeSession: privateProcedure.mutation(async ({ ctx }) => {
@@ -79,16 +88,6 @@ export const appRouter = router({
     })
 
     return { url: stripeSession.url }
-  }),
-  
-  getUserFiles: privateProcedure.query(async ({ ctx }) => {
-    const { userId } = ctx
-
-    return await db.file.findMany({
-      where: {
-        userId,
-      },
-    })
   }),
 
   getFileMessages: privateProcedure
