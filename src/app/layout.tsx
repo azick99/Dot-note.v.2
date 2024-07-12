@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { cn } from '@/lib/utils'
 import Navbar from '@/components/Navbar'
-import Provider from '@/components/Provider'
 import { Toaster } from '@/components/ui/toaster'
 import './globals.css'
 import 'react-loading-skeleton/dist/skeleton.css'
 import 'simplebar-react/dist/simplebar.min.css'
+import Providers from '@/components/Provider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -22,18 +22,18 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className="light">
-      <Provider>
+      <Providers>
         <body
           className={cn(
             'min-h-screen font-sans antialised grainy',
             inter.className
           )}
         >
-          <Toaster/>
+          <Toaster />
           <Navbar />
           {children}
         </body>
-      </Provider>
+      </Providers>
     </html>
   )
 }
