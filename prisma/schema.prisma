@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -12,16 +9,39 @@ datasource db {
 }
 
 model User {
-  id    String @id @unique //matches kinde user id
-  email String @unique
+  id                     String    @id @unique
+  email                  String    @unique
+  stripeCurrentPeriodEnd DateTime? @map("stripe_current_period_end")
+  stripeCustomerId       String?   @unique @map("stripe_customer_id")
+  stripePriceId          String?   @map("stripe_price_id")
+  stripeSubscriptionId   String?   @unique @map("stripe_subscription_id")
+  File                   File[]
+  Message                Message[]
+}
 
-  File    File[]
-  Message Message[]
+model File {
+  id           String       @id @default(cuid())
+  name         String
+  uploadStatus uploadStatus @default(PENDING)
+  url          String
+  key          String
+  createdAt    DateTime     @default(now())
+  upadated     DateTime     @updatedAt
+  userId       String?
+  message      Message[]
+  User         User?        @relation(fields: [userId], references: [id])
+}
 
-  stripeCustomerId       String?   @unique @map(name: "stripe_customer_id")
-  stripeSubscriptionId   String?   @unique @map(name: "stripe_subscription_id")
-  stripePriceId          String?   @map(name: "stripe_price_id")
-  stripeCurrentPeriodEnd DateTime? @map(name: "stripe_current_period_end")
+model Message {
+  id            String   @id @default(cuid())
+  text          String
+  isUserMessage Boolean
+  createdAt     DateTime @default(now())
+  upadated      DateTime @updatedAt
+  userId        String?
+  fileId        String?
+  User          User?    @relation(fields: [userId], references: [id])
+  File          File?    @relation(fields: [fileId], references: [id])
 }
 
 enum uploadStatus {
@@ -29,33 +49,4 @@ enum uploadStatus {
   PROCESSING
   FAILED
   SUCCESS
-}
-
-model File {
-  id   String @id @default(cuid())
-  name String
-
-  uploadStatus uploadStatus @default(PENDING)
-  url          String
-  key          String
-  message      Message[]
-  createdAt    DateTime     @default(now())
-  upadated     DateTime     @updatedAt
-  User         User?        @relation(fields: [userId], references: [id])
-  userId       String?
-}
-
-model Message {
-  id   String @id @default(cuid())
-  text String @db.Text()
-
-  isUserMessage Boolean
-
-  createdAt DateTime @default(now())
-  upadated  DateTime @updatedAt
-
-  User   User?   @relation(fields: [userId], references: [id])
-  userId String?
-  File   File?   @relation(fields: [fileId], references: [id])
-  fileId String?
 }
