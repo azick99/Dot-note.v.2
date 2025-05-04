@@ -16,7 +16,7 @@ const Page = async ({ params }: PageProps) => {
 
   const user = await currentUser()
 
-  if (!user || !user?.id) redirect(`/auth-callback?origin=dashboard/${fileid}`)
+  if (!user || !user?.id) redirect(`dashboard/${fileid}`)
 
   const file = await db.file.findFirst({
     where: {
