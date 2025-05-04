@@ -13,6 +13,19 @@ export const PLANS = [
     },
   },
   {
+    name: 'Standard',
+    slug: 'standard',
+    quota: 50,
+    pagesPerPdf: 5,
+    price: {
+      amount: 45,
+      priceIds: {
+        test: '',
+        production: '',
+      },
+    },
+  },
+  {
     name: 'Pro',
     slug: 'pro',
     quota: 50,

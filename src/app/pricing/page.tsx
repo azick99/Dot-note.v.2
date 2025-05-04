@@ -1,5 +1,4 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
-import UpgradeButton from '@/components/UpgradeButton'
 import { buttonVariants } from '@/components/ui/button'
 import {
   Tooltip,
@@ -46,6 +45,33 @@ async function PricingPage() {
       ],
     },
     {
+      plan: 'Standard',
+      tagline: 'For medium side projects.',
+      quota: 50,
+      features: [
+        {
+          text: '15 pages per PDF',
+          footnote: 'The maximum amount of pages per PDF-file.',
+        },
+        {
+          text: '8MB file size limit',
+          footnote: 'The maximum file size of a single PDF file.',
+        },
+        {
+          text: 'Mobile-friendly interface',
+        },
+        {
+          text: 'Higher-quality responses',
+          footnote: 'Better algorithmic responses for enhanced content quality',
+          negative: true,
+        },
+        {
+          text: 'Priority support',
+          negative: true,
+        },
+      ],
+    },
+    {
       plan: 'Pro',
       tagline: 'For larger projects with higher needs.',
       quota: PLANS.find((p) => p.slug === 'pro')!.quota,
@@ -74,7 +100,7 @@ async function PricingPage() {
 
   return (
     <>
-      <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-5xl">
+      <MaxWidthWrapper className="mb-8 mt-24 text-center max-w-8xl">
         <div className="mx-auto mb-10 sm:max-w-lg">
           <h1 className="text-6xl font-bold sm:text-7xl">Pricing</h1>
           <p className="mt-5 text-gray-600 sm:text-lg">
@@ -83,7 +109,7 @@ async function PricingPage() {
           </p>
         </div>
 
-        <div className="pt-12 grid grid-cols-1 gap-10 lg:grid-cols-2">
+        <div className="pt-12 grid grid-cols-1 gap-10 lg:grid-cols-3">
           <TooltipProvider>
             {pricingItems.map(({ plan, tagline, quota, features }) => {
               const price =
@@ -110,7 +136,7 @@ async function PricingPage() {
                     </h3>
                     <p className="text-gray-500">{tagline}</p>
                     <p className="my-5 font-display text-6xl font-semibold">
-                      ${price}
+                     {price} zl
                     </p>
                     <p className="text-gray-500">per month</p>
                   </div>
@@ -183,8 +209,6 @@ async function PricingPage() {
                         {user ? 'Upgrade now' : 'Sign up'}
                         <ArrowRight className="h-5 w-5 ml-1.5" />
                       </Link>
-                    ) : user ? (
-                      <UpgradeButton />
                     ) : (
                       <Link
                         href="/sign-in"

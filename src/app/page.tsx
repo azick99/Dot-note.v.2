@@ -1,9 +1,13 @@
 import MaxWidthWrapper from '@/components/MaxWidthWrapper'
 import { buttonVariants } from '@/components/ui/button'
+import { SignInButton } from '@clerk/nextjs'
+import { currentUser } from '@clerk/nextjs/server'
 import { ArrowRight } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
-export default function Home() {
+
+export default async function Home() {
+  const user = await currentUser()
   return (
     <>
       <MaxWidthWrapper className="md-12 mt-28 sm:mt-40 flex flex-col items-center">
@@ -19,16 +23,27 @@ export default function Home() {
           Dot Note allows you to have conversations with any PDF document.
           Simply upload yoou file and start asking quiestions right away.
         </p>
-        <Link
+        <div
           className={buttonVariants({
             size: 'lg',
-            className: 'mt-5 bg-gray-700',
+            className: 'cursor-pointer mt-10',
           })}
-          href="/dashboard"
-          target="_blank"
         >
-          Get started <ArrowRight className="ml-2 h-5 w-5" />
-        </Link>
+          {user ? (
+            <Link
+              href="/dashboard"
+              className="flex items-center justify-center "
+            >
+              <span>Get started</span> <ArrowRight className="ml-2 h-5 w-5" />
+            </Link>
+          ) : (
+            <SignInButton>
+              <div className="flex items-center justify-center ">
+                <span>Get started</span> <ArrowRight className="ml-2 h-5 w-5" />
+              </div>
+            </SignInButton>
+          )}
+        </div>
       </MaxWidthWrapper>
 
       {/* Value proposition section */}

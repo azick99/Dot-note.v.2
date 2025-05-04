@@ -1,32 +1,57 @@
 import Link from 'next/link'
 import MaxWidthWrapper from './MaxWidthWrapper'
 import { buttonVariants } from './ui/button'
+
+import { currentUser } from '@clerk/nextjs/server'
 import {
-  LoginLink,
-  RegisterLink,
-  getKindeServerSession,
-} from '@kinde-oss/kinde-auth-nextjs/server'
-import { ArrowRight } from 'lucide-react'
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  SignUpButton,
+  UserButton,
+} from '@clerk/nextjs'
 
-// import MobileNav from './MobileNav'
-import UserAccountNav from './UserAccountNav'
-
-const Navbar = async() => {
-  const { getUser } = getKindeServerSession()
-  const user = await getUser()
-
+export default async function Navbar() {
+  const user = await currentUser()
   return (
     <nav className="sticky h-14 inset-x-0 top-0 z-30 w-full border-b border-gray-200 bg-white/75 backdrop-blur-lg transition-all">
       <MaxWidthWrapper>
         <div className="flex h-14 items-center justify-between border-b border-zinc-200">
-          <Link href="/" className="flex z-40 font-semibold">
-            <span>quill.</span>
+          <Link href="/" className="flex items-center pl-5 gap-2">
+            <span className=" text-logo bg-black rounded-full w-7 h-7 flex justify-center items-center text-white font-serif font-medium">
+              N
+            </span>{' '}
+            <h1 className="font-bold text-gray-700">Dot note</h1>
           </Link>
 
-          {/* <MobileNav isAuth={!!user} /> */}
-
-          <div className="hidden items-center space-x-4 sm:flex">
+          <div className="flex items-center space-x-4 ">
             {!user ? (
+              <>
+                <SignedOut>
+                  <SignInButton>
+                    <span
+                      className={buttonVariants({
+                        variant: 'ghost',
+                        size: 'sm',
+                        className: 'cursor-pointer',
+                      })}
+                    >
+                      Sign in
+                    </span>
+                  </SignInButton>
+                  <SignUpButton>
+                    <span
+                      className={buttonVariants({
+                        size: 'sm',
+                        className: 'cursor-pointer',
+                      })}
+                    >
+                      Sign up
+                    </span>
+                  </SignUpButton>
+                </SignedOut>
+              </>
+            ) : (
               <>
                 <Link
                   href="/pricing"
@@ -37,24 +62,6 @@ const Navbar = async() => {
                 >
                   Pricing
                 </Link>
-                <LoginLink
-                  className={buttonVariants({
-                    variant: 'ghost',
-                    size: 'sm',
-                  })}
-                >
-                  Sign in
-                </LoginLink>
-                <RegisterLink
-                  className={buttonVariants({
-                    size: 'sm',
-                  })}
-                >
-                  Get started <ArrowRight className="ml-1.5 h-5 w-5" />
-                </RegisterLink>
-              </>
-            ) : (
-              <>
                 <Link
                   href="/dashboard"
                   className={buttonVariants({
@@ -64,16 +71,9 @@ const Navbar = async() => {
                 >
                   Dashboard
                 </Link>
-
-                <UserAccountNav
-                  name={
-                    !user.given_name || !user.family_name
-                      ? 'Your Account'
-                      : `${user.given_name} ${user.family_name}`
-                  }
-                  email={user.email ?? ''}
-                  imageUrl={user.picture ?? ''}
-                />
+                <SignedIn>
+                  <UserButton />
+                </SignedIn>
               </>
             )}
           </div>
@@ -82,5 +82,3 @@ const Navbar = async() => {
     </nav>
   )
 }
-
-export default Navbar
