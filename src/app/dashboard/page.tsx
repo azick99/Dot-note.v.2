@@ -7,10 +7,10 @@ export default async function Page() {
   
   const user = await currentUser()
 
-  if (!user || !user.id) redirect('/dashboard')
+  if (!user || !user.id) redirect('/auth-callback?origin=dashboard')
   const dbUser = await db.user.findFirst({
     where: { id: user.id },
   })
-  if (!dbUser) redirect('/dashboard')
+  if (!dbUser) redirect('/auth-callback?origin=dashboard')
   return <Dashboard />
 }

@@ -37,7 +37,7 @@ export default async function Home() {
               <span>Get started</span> <ArrowRight className="ml-2 h-5 w-5" />
             </Link>
           ) : (
-            <SignInButton>
+            <SignInButton fallbackRedirectUrl={'/dashboard'}>
               <div className="flex items-center justify-center ">
                 <span>Get started</span> <ArrowRight className="ml-2 h-5 w-5" />
               </div>
