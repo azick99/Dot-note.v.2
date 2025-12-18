@@ -4,10 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build && prisma generate",
+    "build": "pnpm i @prisma/client && prisma generate db push && next build",
     "start": "next start",
     "lint": "next lint"
   },
+  "packageManager": "pnpm@9.0.0",
   "dependencies": {
     "@clerk/nextjs": "^6.18.5",
     "@hookform/resolvers": "^3.3.4",
