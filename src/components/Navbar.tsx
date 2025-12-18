@@ -28,7 +28,7 @@ export default async function Navbar() {
             {!user ? (
               <>
                 <SignedOut>
-                  <SignInButton fallbackRedirectUrl="/dashboard">
+                  <SignInButton forceRedirectUrl="/dashboard">
                     <span
                       className={buttonVariants({
                         variant: 'ghost',

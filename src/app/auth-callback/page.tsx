@@ -11,7 +11,7 @@ export default function Page() {
   const origin = searchParams.get('origin')
 
   const { data, isSuccess, isError, error } = trpc.authCallback.useQuery()
-
+  
   useEffect(() => {
     if (isSuccess && data.success) {
       router.push(origin ? `/${origin}` : '/dashboard')
