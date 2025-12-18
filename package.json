@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
 
+  "packageManager": "pnpm@9.0.0",
   "dependencies": {
     "@clerk/nextjs": "^6.18.5",
     "@hookform/resolvers": "^3.3.4",
