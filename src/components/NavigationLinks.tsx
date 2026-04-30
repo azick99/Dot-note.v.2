@@ -1,5 +1,6 @@
 "use client";
 
+// This component is used in the Navbar, which is a client component, so this also needs to be a client component
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "./ui/button";
@@ -10,7 +11,7 @@ const links = [
   { href: "/dashboard", label: "Dashboard" },
 ];
 
-export function NavLinks() {
+const NavLinks = () => {
   const pathname = usePathname();
 
   return (
@@ -36,3 +37,5 @@ export function NavLinks() {
     </>
   );
 }
+
+export default NavLinks;
