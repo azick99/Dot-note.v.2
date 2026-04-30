@@ -9,7 +9,7 @@ import {
   SignUpButton,
   UserButton,
 } from "@clerk/nextjs";
-import { NavLinks } from "./Navlinks";
+import NavLinks from "./NavigationLinks";
 
 export default async function Navbar() {
   const user = await currentUser();
