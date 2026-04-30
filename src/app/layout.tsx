@@ -40,7 +40,7 @@ export const metadata: Metadata = {
     title: "Dot Note — AI PDF Chat App",
     description:
       "Chat with your PDF documents using the power of AI. Ask questions, get instant answers.",
-    images: ["/opengraph-image.png"],
+    images: [`${BASE_URL}/opengraph-image`],
   },
 };
 
