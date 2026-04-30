@@ -8,34 +8,39 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "simplebar-react/dist/simplebar.min.css";
 import Providers from "@/components/Provider";
 import { ClerkProvider } from "@clerk/nextjs";
-import Head from "next/head";
 
 const inter = Inter({ subsets: ["latin"] });
 
+const BASE_URL = "https://dot-note-aziz.vercel.app";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(BASE_URL),
   title: "Dot Note — AI PDF Chat App",
   description:
     "Chat with your PDF documents using the power of AI. Ask questions, get instant answers — all from your browser.",
   openGraph: {
     title: "Dot Note — AI PDF Chat App",
-    description: "Chat with your PDF documents using the power of AI.",
-    url: "https://dot-note-aziz.vercel.app",
+    description:
+      "Chat with your PDF documents using the power of AI. Ask questions, get instant answers.",
+    url: BASE_URL,
     siteName: "Dot Note",
     images: [
       {
-        url: "https://dot-note-aziz.vercel.app/thumbnail.png",
+        url: "/opengraph-image.png", // resolves via metadataBase
         width: 1200,
         height: 630,
-        alt: "Dot Note Preview",
+        alt: "Dot Note — Chat with your documents in seconds",
       },
     ],
     type: "website",
+    locale: "en_US",
   },
   twitter: {
     card: "summary_large_image",
     title: "Dot Note — AI PDF Chat App",
-    description: "Chat with your PDF documents using the power of AI.",
-    images: ["https://dot-note-aziz.vercel.app/thumbnail.png"],
+    description:
+      "Chat with your PDF documents using the power of AI. Ask questions, get instant answers.",
+    images: ["/opengraph-image.png"],
   },
 };
 
@@ -50,40 +55,18 @@ export default function RootLayout({
         lang="en"
         className="light"
       >
-        <Providers>
-          <Head>
-            <meta
-              property="og:title"
-              content="chat with pdf"
-            />
-            <meta
-              property="og:description"
-              content="A description of your website."
-            />
-            <meta
-              property="og:image"
-              content="https://res.cloudinary.com/djldkocgz/image/upload/v1746395958/1_ft5xsq.png"
-            />
-            <meta
-              property="og:url"
-              content="https://dot-note-aziz.vercel.app"
-            />
-            <meta
-              name="twitter:card"
-              content="summary_large_image"
-            />
-          </Head>
-          <body
-            className={cn(
-              "min-h-screen font-sans antialised grainy",
-              inter.className,
-            )}
-          >
+        <body
+          className={cn(
+            "min-h-screen font-sans antialiased grainy",
+            inter.className,
+          )}
+        >
+          <Providers>
             <Toaster />
             <Navbar />
             {children}
-          </body>
-        </Providers>
+          </Providers>
+        </body>
       </html>
     </ClerkProvider>
   );
