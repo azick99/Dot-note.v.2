@@ -88,3 +88,15 @@
 .scrollbar-thumb-rounded::-webkit-scrollbar-track {
   border-radius: 7px;
 }
+
+.nav-scrolled {
+  box-shadow: 0 1px 12px 0 hsl(var(--foreground) / 0.06);
+}
+ 
+/* Smoother backdrop for supported browsers */
+@supports (backdrop-filter: blur(12px)) {
+  nav {
+    background-color: hsl(var(--background) / 0.75);
+  }
+}
+ 

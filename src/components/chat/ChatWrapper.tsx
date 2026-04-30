@@ -1,15 +1,15 @@
-'use client'
+"use client";
 
-import { trpc } from '@/app/_trpc/client'
-import ChatInput from './ChatInput'
-import Messages from './Messages'
-import { ChevronLeft, Loader2, XCircle } from 'lucide-react'
-import Link from 'next/link'
-import { buttonVariants } from '../ui/button'
-import { ChatProvider } from './ChatContext'
+import { trpc } from "@/app/_trpc/client";
+import ChatInput from "./ChatInput";
+import Messages from "./Messages";
+import { ChevronLeft, Loader2, XCircle } from "lucide-react";
+import Link from "next/link";
+import { buttonVariants } from "../ui/button";
+import { ChatProvider } from "./ChatContext";
 
 interface ChatWrapperProps {
-  fileId: string
+  fileId: string;
 }
 
 const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
@@ -17,10 +17,10 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
     { fileId },
     {
       refetchInterval: (data) =>
-        data?.status === 'SUCCESS' || data?.status === 'FAILED' ? false : 500,
-    }
-  )
-  console.log('🚀 ~ file: ChatWrapper.tsx:20 ~ ChatWrapper ~ data:', data)
+        data?.status === "SUCCESS" || data?.status === "FAILED" ? false : 500,
+    },
+  );
+
   if (isLoading)
     return (
       <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
@@ -35,9 +35,9 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
         </div>
         <ChatInput isDisabled />
       </div>
-    )
+    );
 
-  if (data?.status === 'PROCESSING')
+  if (data?.status === "PROCESSING")
     return (
       <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
         <div className="flex-1 flex justify-center items-center flex-col mb-28">
@@ -49,9 +49,9 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
         </div>
         <ChatInput isDisabled />
       </div>
-    )
+    );
 
-  if (data?.status === 'FAILED')
+  if (data?.status === "FAILED")
     return (
       <div className="relative min-h-full bg-zinc-50 flex divide-y divide-zinc-200 flex-col justify-between gap-2">
         <div className="flex-1 flex justify-center items-center flex-col mb-28">
@@ -64,8 +64,8 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
             <Link
               href="/dashboard"
               className={buttonVariants({
-                variant: 'secondary',
-                className: 'mt-4',
+                variant: "secondary",
+                className: "mt-4",
               })}
             >
               <ChevronLeft className="h-3 w-3 mr-1.5" />
@@ -75,7 +75,7 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
         </div>
         <ChatInput isDisabled />
       </div>
-    )
+    );
 
   return (
     <ChatProvider fileId={fileId}>
@@ -83,10 +83,10 @@ const ChatWrapper = ({ fileId }: ChatWrapperProps) => {
         <div className="flex-1 justify-between flex flex-col mb-28">
           <Messages fileId={fileId} />
         </div>
-        <ChatInput isDisabled />
+        <ChatInput isDisabled={false} />
       </div>
     </ChatProvider>
-  )
-}
+  );
+};
 
-export default ChatWrapper
+export default ChatWrapper;

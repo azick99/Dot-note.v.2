@@ -1,23 +1,34 @@
-import { Send } from 'lucide-react'
-import { Button } from '../ui/button'
-import { Textarea } from '../ui/textarea'
-import { useContext, useRef } from 'react'
-import { ChatContext } from './ChatContext'
+import { Send } from "lucide-react";
+import { Button } from "../ui/button";
+import { Textarea } from "../ui/textarea";
+import { useContext, useRef, useCallback } from "react";
+import { ChatContext } from "./ChatContext";
 
 type ChatInputProps = {
-  isDisabled: boolean
-}
+  isDisabled: boolean;
+};
 
 const ChatInput = ({ isDisabled }: ChatInputProps) => {
   const { handleInputChange, addMessage, isLoading, message } =
-    useContext(ChatContext)
+    useContext(ChatContext);
 
-  const textareRef = useRef<HTMLTextAreaElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleAddMessageClick = () => {
-    addMessage()
-    textareRef.current?.focus()
-  }
+  const handleAddMessageClick = useCallback(() => {
+    addMessage();
+    textareaRef.current?.focus();
+  }, [addMessage]);
+
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        addMessage();
+        textareaRef.current?.focus();
+      }
+    },
+    [addMessage],
+  );
 
   return (
     <div className="absolute bottom-0 left-0 w-full">
@@ -28,19 +39,14 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
               <Textarea
                 rows={1}
                 maxRows={3}
-                ref={textareRef}
+                ref={textareaRef}
                 value={message}
                 onChange={handleInputChange}
                 autoFocus
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey) {
-                    e.preventDefault()
-                    addMessage()
-                    textareRef.current?.focus()
-                  }
-                }}
+                onKeyDown={handleKeyDown}
                 placeholder="Enter your question..."
                 className="resize-none pr-16 text-base py-3 scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch"
+                disabled={isDisabled}
               />
               <Button
                 disabled={isLoading || !message}
@@ -55,7 +61,7 @@ const ChatInput = ({ isDisabled }: ChatInputProps) => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ChatInput
+export default ChatInput;
