@@ -1,39 +1,51 @@
-'use client'
+"use client";
 
-import { trpc } from '@/app/_trpc/client'
-import UploadButton from './UploadButton'
-import { Ghost, Loader2, MessageSquare, Plus, Trash } from 'lucide-react'
-import Skeleton from 'react-loading-skeleton'
-import Link from 'next/link'
-import { format } from 'date-fns'
-import { Button } from './ui/button'
-import { useState } from 'react'
+import { trpc } from "@/app/_trpc/client";
+import UploadButton from "./UploadButton";
+import { Ghost, Loader2, MessageSquare, Plus, Trash } from "lucide-react";
+import Skeleton from "react-loading-skeleton";
+import Link from "next/link";
+import { format } from "date-fns";
+import { Button } from "./ui/button";
+import { useState, useMemo, useCallback } from "react";
 
 export default function Dashboard() {
   const [currentlyDeleting, setCurrentlyDeleting] = useState<string | null>(
-    null
-  )
+    null,
+  );
 
-  const utils = trpc.useContext()
+  const utils = trpc.useContext();
 
-  const { data: files, isLoading } = trpc.getUserFiles.useQuery()
+  const { data: files, isLoading } = trpc.getUserFiles.useQuery();
 
   // Delete file
   const { mutate: deleteFile } = trpc.deleteFile.useMutation({
     onSuccess: () => {
-      utils.getUserFiles.invalidate()
+      utils.getUserFiles.invalidate();
     },
     onMutate: ({ id }) => {
-      setCurrentlyDeleting(id)
+      setCurrentlyDeleting(id);
     },
     onSettled: () => {
-      setCurrentlyDeleting(null)
+      setCurrentlyDeleting(null);
     },
-  })
+  });
 
-  const handleDelete = async (id: string) => {
-    deleteFile({ id })
-  }
+  const handleDelete = useCallback(
+    async (id: string) => {
+      deleteFile({ id });
+    },
+    [deleteFile],
+  );
+
+  // Memoize sorted files to prevent unnecessary re-renders
+  const sortedFiles = useMemo(() => {
+    if (!files) return [];
+    return [...files].sort(
+      (a, b) =>
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
+    );
+  }, [files]);
 
   return (
     <main className="mx-auto max-w-7xl md:p-10">
@@ -45,59 +57,57 @@ export default function Dashboard() {
       {/* Display all user files */}
       {files && files?.length !== 0 ? (
         <ul className="mt-8 grid grid-cols-1 gap-6 divide-y divide-zinc-200 md:grid-cols-2 lg:grid-cols-3">
-          {files
-            .sort(
-              (a, b) =>
-                new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
-            )
-            .map((file) => (
-              <li
-                key={file.id}
-                className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg"
+          {sortedFiles.map((file) => (
+            <li
+              key={file.id}
+              className="col-span-1 divide-y divide-gray-200 rounded-lg bg-white shadow transition hover:shadow-lg"
+            >
+              <Link
+                href={`/dashboard/${file.id}`}
+                className="flex flex-col gap-2"
               >
-                <Link
-                  href={`/dashboard/${file.id}`}
-                  className="flex flex-col gap-2"
-                >
-                  <div className="pt-6 px-6 flex w-full items-center justify-between space-x-4">
-                    <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500" />
-                    <div className="flex-1 truncate">
-                      <div className="flex items-center space-x-3">
-                        <h3 className="truncate text-lg font-medium text-zinc-900">
-                          {file.name}
-                        </h3>
-                      </div>
+                <div className="pt-6 px-6 flex w-full items-center justify-between space-x-4">
+                  <div className="h-10 w-10 flex-shrink-0 rounded-full bg-gradient-to-r from-cyan-500 to-blue-500" />
+                  <div className="flex-1 truncate">
+                    <div className="flex items-center space-x-3">
+                      <h3 className="truncate text-lg font-medium text-zinc-900">
+                        {file.name}
+                      </h3>
                     </div>
                   </div>
-                </Link>
-                <div className="px-6 mt-4 grid grid-cols-3 palce-items-center gap-6 py-2 text-sm text-zinc-500">
-                  <div className="flex items-center gap-2">
-                    <Plus className="h-4 w-4" />
-                    {format(new Date(file.createdAt), 'dd/MM/yyyy')}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <MessageSquare className="h-4 w-4" />
-                    mocked
-                  </div>
-                  <Button
-                    size="sm"
-                    className="w-full border border-transparent hover:border-red-500/60 transition-all"
-                    variant="destructive"
-                    onClick={() => handleDelete(file.id)}
-                  >
-                    {currentlyDeleting === file.id ? (
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    ) : (
-                      <Trash className="h-4 w-4" />
-                    )}
-                  </Button>
                 </div>
-              </li>
-            ))}
+              </Link>
+              <div className="px-6 mt-4 grid grid-cols-3 place-items-center gap-6 py-2 text-sm text-zinc-500">
+                <div className="flex items-center gap-2">
+                  <Plus className="h-4 w-4" />
+                  {format(new Date(file.createdAt), "dd/MM/yyyy")}
+                </div>
+                <div className="flex items-center gap-2">
+                  <MessageSquare className="h-4 w-4" />
+                  mocked
+                </div>
+                <Button
+                  size="sm"
+                  className="w-full border border-transparent hover:border-red-500/60 transition-all"
+                  variant="destructive"
+                  onClick={() => handleDelete(file.id)}
+                >
+                  {currentlyDeleting === file.id ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Trash className="h-4 w-4" />
+                  )}
+                </Button>
+              </div>
+            </li>
+          ))}
         </ul>
       ) : isLoading ? (
-        <Skeleton height={100} className="my-2" count={3} />
+        <Skeleton
+          height={100}
+          className="my-2"
+          count={3}
+        />
       ) : (
         <div className="mt-16 flex flex-col items-center gap-2">
           <Ghost className="h-8 w-8 text-zinc-800" />
@@ -106,5 +116,5 @@ export default function Dashboard() {
         </div>
       )}
     </main>
-  )
+  );
 }

@@ -1,31 +1,34 @@
-import { useState } from 'react'
-import { Dialog, DialogContent, DialogTrigger } from './ui/dialog'
-import { Button } from './ui/button'
-import { Expand, Loader2 } from 'lucide-react'
-import SimpleBar from 'simplebar-react'
-import { Document, Page } from 'react-pdf'
-import { useToast } from './ui/use-toast'
-import { useResizeDetector } from 'react-resize-detector'
+import { useState } from "react";
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "./ui/dialog";
+import { Button } from "./ui/button";
+import { Expand, Loader2 } from "lucide-react";
+import SimpleBar from "simplebar-react";
+import { Document, Page } from "react-pdf";
+import { useToast } from "./ui/use-toast";
+import { useResizeDetector } from "react-resize-detector";
 
 interface PdfFullscreenProps {
-  fileUrl: string
+  fileUrl: string;
 }
 
 const PdfFullscreen = ({ fileUrl }: PdfFullscreenProps) => {
-  const [isOpen, setIsOpen] = useState(false)
-  const { toast } = useToast()
-  const [numPages, setNumPages] = useState<number>()
-  const { width, ref } = useResizeDetector()
+  const [isOpen, setIsOpen] = useState(false);
+  const { toast } = useToast();
+  const [numPages, setNumPages] = useState<number>();
+  const { width, ref } = useResizeDetector();
   return (
     <Dialog
       open={isOpen}
       onOpenChange={(v) => {
         if (!v) {
-          setIsOpen(v)
+          setIsOpen(v);
         }
       }}
     >
-      <DialogTrigger onClick={() => setIsOpen(true)} asChild>
+      <DialogTrigger
+        onClick={() => setIsOpen(true)}
+        asChild
+      >
         <Button
           aria-label="Open Fullscreen"
           variant="ghost"
@@ -35,7 +38,11 @@ const PdfFullscreen = ({ fileUrl }: PdfFullscreenProps) => {
         </Button>
       </DialogTrigger>
       <DialogContent className="max-w-7xl h-full">
-        <SimpleBar autoHide={false} className="max-h-[calc(100vh-10rem)] mt-6">
+        <DialogTitle className="sr-only">PDF Fullscreen View</DialogTitle>
+        <SimpleBar
+          autoHide={false}
+          className="max-h-[calc(100vh-10rem)] mt-6"
+        >
           <div ref={ref}>
             <Document
               loading={
@@ -45,13 +52,13 @@ const PdfFullscreen = ({ fileUrl }: PdfFullscreenProps) => {
               }
               onLoadError={() => {
                 toast({
-                  title: 'Erorr loading PDF',
-                  description: 'Please try again',
-                  variant: 'destructive',
-                })
+                  title: "Erorr loading PDF",
+                  description: "Please try again",
+                  variant: "destructive",
+                });
               }}
               onLoadSuccess={({ numPages }) => {
-                setNumPages(numPages)
+                setNumPages(numPages);
               }}
               file={fileUrl}
               className="max-h-full"
@@ -69,7 +76,7 @@ const PdfFullscreen = ({ fileUrl }: PdfFullscreenProps) => {
         </SimpleBar>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default PdfFullscreen
+export default PdfFullscreen;
