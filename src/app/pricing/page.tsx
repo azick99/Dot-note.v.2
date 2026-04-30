@@ -20,7 +20,7 @@ const pricingItems = [
     features: [
       { text: "5 pages per PDF", footnote: "Maximum pages per PDF file." },
       {
-        text: "4MB file size limit",
+        text: "8MB file size limit",
         footnote: "Maximum size of a single PDF.",
       },
       { text: "Mobile-friendly interface" },
@@ -39,7 +39,7 @@ const pricingItems = [
     features: [
       { text: "15 pages per PDF", footnote: "Maximum pages per PDF file." },
       {
-        text: "8MB file size limit",
+        text: "16MB file size limit",
         footnote: "Maximum size of a single PDF.",
       },
       { text: "Mobile-friendly interface" },
@@ -58,7 +58,7 @@ const pricingItems = [
     features: [
       { text: "25 pages per PDF", footnote: "Maximum pages per PDF file." },
       {
-        text: "16MB file size limit",
+        text: "32MB file size limit",
         footnote: "Maximum size of a single PDF.",
       },
       { text: "Mobile-friendly interface" },

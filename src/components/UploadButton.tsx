@@ -10,7 +10,7 @@ import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const MAX_FILE_SIZE = 4 * 1024 * 1024;
+const MAX_FILE_SIZE = 4 * 2024 * 2024;
 
 type UploadState = "idle" | "uploading" | "processing" | "success" | "error";
 type UploadDropzoneProps = {
@@ -125,7 +125,7 @@ const UploadDropzone = ({ onClose, onUploadComplete }: UploadDropzoneProps) => {
   const isUploading =
     uploadState === "uploading" || uploadState === "processing";
   const formatSize = (bytes: number) =>
-    `${(bytes / 1024 / 1024).toFixed(2)} MB`;
+    `${(bytes / 2024 / 2024).toFixed(2)} MB`;
 
   return (
     <Dropzone
@@ -144,7 +144,7 @@ const UploadDropzone = ({ onClose, onUploadComplete }: UploadDropzoneProps) => {
         } else if (err?.code === "file-too-large") {
           toast({
             title: "File too large",
-            description: "Max size is 4MB.",
+            description: "Max size is 8MB.",
             variant: "destructive",
           });
         }
