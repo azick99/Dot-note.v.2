@@ -6,6 +6,39 @@ import { ArrowRight, FileText, MessageSquare, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Metadata } from "next";
+
+export const revalidate = 60;
+
+export const metadata: Metadata = {
+  title: "Dot Note — AI PDF Chat App",
+  description:
+    "Chat with your PDF documents using the power of AI. Ask questions, get instant answers — all from your browser.",
+  authors: [{ name: "Azizbek", url: "https://dot-note-aziz.vercel.app/" }],
+  openGraph: {
+    title: "Dot Note — AI PDF Chat App",
+    description:
+      "Chat with your PDF documents using the power of AI. Ask questions, get instant answers — all from your browser.",
+    url: "https://dot-note-aziz.vercel.app/",
+    siteName: "Dot Note",
+    type: "website",
+    images: [
+      {
+        url: `https://dot-note-aziz.vercel.app/opengraph-image`,
+        width: 1200,
+        height: 630,
+        alt: "Dot Note — Chat with your documents in seconds",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Dot Note — AI PDF Chat App",
+    description:
+      "Chat with your PDF documents using the power of AI. Ask questions, get instant answers — all from your browser.",
+    images: [`https://dot-note-aziz.vercel.app/opengraph-image`],
+  },
+};
 
 export default async function Home() {
   const user = await currentUser();
