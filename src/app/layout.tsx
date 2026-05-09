@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     siteName: "Dot Note",
     images: [
       {
-        url: "/opengraph-image.png", // resolves via metadataBase
+        url: `${BASE_URL}/opengraph-image`,
         width: 1200,
         height: 630,
         alt: "Dot Note — Chat with your documents in seconds",

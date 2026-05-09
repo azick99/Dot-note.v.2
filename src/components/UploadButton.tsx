@@ -10,7 +10,7 @@ import { trpc } from "@/app/_trpc/client";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 
-const MAX_FILE_SIZE = 4 * 2024 * 2024;
+const MAX_FILE_SIZE = 8 * 2024 * 2024;
 
 type UploadState = "idle" | "uploading" | "processing" | "success" | "error";
 type UploadDropzoneProps = {
@@ -91,7 +91,7 @@ const UploadDropzone = ({ onClose, onUploadComplete }: UploadDropzoneProps) => {
       if (file.size > MAX_FILE_SIZE) {
         toast({
           title: "File too large",
-          description: "Max size is 4MB.",
+          description: "Max size is 8MB.",
           variant: "destructive",
         });
         return;
@@ -247,7 +247,7 @@ const UploadDropzone = ({ onClose, onUploadComplete }: UploadDropzoneProps) => {
                       ? "Drop your PDF here"
                       : "Click to upload or drag & drop"}
                   </p>
-                  <p className="text-xs text-muted-foreground">PDF up to 4MB</p>
+                  <p className="text-xs text-muted-foreground">PDF up to 8MB</p>
                 </>
               )}
             </div>

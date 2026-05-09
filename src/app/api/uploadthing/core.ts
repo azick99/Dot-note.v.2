@@ -9,7 +9,7 @@ import { currentUser } from '@clerk/nextjs/server'
 const f = createUploadthing()
 
 export const ourFileRouter = {
-  pdfUploader: f({ pdf: { maxFileSize: '4MB' } })
+  pdfUploader: f({ pdf: { maxFileSize: '8MB' } })
     .middleware(async ({ req }) => {
       const user = await currentUser()
 
